@@ -1,3 +1,5 @@
+# Note: Work in progress...
+
 # [PHP] Price monitor
 Track a price online storing data in a Database and visualize the data via graphs.
 

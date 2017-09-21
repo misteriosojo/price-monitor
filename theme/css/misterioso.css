@@ -1,0 +1,26 @@
+﻿body{
+    background: url(../img/bg.jpg);
+}
+
+footer{
+    background: url(../img/bg-footer.jpg);
+    color: white;
+}
+
+footer p{
+    margin-top: 10px;
+    margin-left:50px;
+    height: 30px;
+}
+
+#logo{
+    background: url(../img/logo.png) no-repeat left top;
+    background-size:contain;
+    height: 85px;
+    width: 85px;
+    float: left;
+    clear: both;
+    margin: 35px 10px 10px 20px;
+    display: block;
+}
+

@@ -24,3 +24,15 @@ footer p{
     display: block;
 }
 
+#products{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#products td{
+    padding-top: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+    text-align:center;
+}

@@ -111,8 +111,6 @@ class DatabaseManager
     public function getProducts()
     {
         $this->checkConnection();
-
-        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableProducts"
-            , PDO::FETCH_ASSOC);
+        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableProducts", PDO::FETCH_ASSOC);
     }
 }

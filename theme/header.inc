@@ -14,7 +14,10 @@
     <link rel="stylesheet" href="theme/css/misterioso.css" type="text/css">
     <link rel="stylesheet" href="theme/css/bootstrap.min.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="theme/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+    <script src="theme/js/utils.js"></script>
 
     <!-- Cerchi dinamici per statistiche -->
     <link href="theme/css/jquery.circliful.css" rel="stylesheet" type="text/css" />

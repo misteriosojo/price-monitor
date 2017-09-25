@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__ . '/../system/config.inc');
 
 /**
  * Class DatabaseManager (Database).
@@ -10,9 +11,6 @@
  * @version 1.0
  * @author Misterioso <misterioso@crypted2.com>
  */
-
-require_once(__DIR__ . '/../system/config.inc');
-
 class DatabaseManager
 {
     // Ip + Port + AuthData + DatabaseStructure
@@ -112,5 +110,44 @@ class DatabaseManager
     {
         $this->checkConnection();
         return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableProducts", PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get crawled data of a specific product in a time interval
+     *
+     * @param $productName String Name of the product
+     * @param $fromDate DateTime Start fetch data from this datetime
+     * @param $toDate DateTime End fetch data at this datetime
+     * @return PDO::FETCH_ASSOC
+     */
+    public function getCrawledData($productName, $fromDate, $toDate)
+    {
+        $this->checkConnection();
+        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableCrawler WHERE `product` LIKE \"$productName\" AND `timestamp` BETWEEN \"$fromDate\" AND \"$toDate\"", PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get crawled data of a specific product from "fromDate" until today
+     *
+     * @param $productName String Name of the product
+     * @param $fromDate DateTime Start fetch data from this datetime
+     * @return PDO::FETCH_ASSOC
+     */
+    public function getCrawledDataFrom($productName, $fromDate)
+    {
+        $this->checkConnection();
+        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableCrawler WHERE `product` LIKE \"$productName\" AND `timestamp` > \"$fromDate\"", PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get all crawled data of a specific product
+     *
+     * @param $productName String Name of the product
+     * @return PDO::FETCH_ASSOC
+     */
+    public function getCrawledDataDefault($productName)
+    {
+        $date = strtotime(date("Y-m-d", strtotime("-".Config::$defaultHistoryInterval." day")));
+        return $this->getCrawledDataFrom($productName, $date);
     }
 }

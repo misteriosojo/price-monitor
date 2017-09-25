@@ -1,4 +1,10 @@
-﻿body{
+﻿canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+body{
     background: url(../img/bg.jpg);
 }
 
@@ -22,6 +28,10 @@ footer p{
     clear: both;
     margin: 35px 10px 10px 20px;
     display: block;
+}
+
+#crawlerDataContainer{
+    margin: 10px 10px 10px 5px;
 }
 
 #products{

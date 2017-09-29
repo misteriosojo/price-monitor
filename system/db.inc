@@ -123,7 +123,11 @@ class DatabaseManager
     public function getCrawledData($productName, $fromDate, $toDate)
     {
         $this->checkConnection();
-        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableCrawler WHERE `product` LIKE \"$productName\" AND `timestamp` BETWEEN \"$fromDate\" AND \"$toDate\"", PDO::FETCH_ASSOC);
+        $statement = $this->pdoConnection->prepare("SELECT * FROM $this->dbName.$this->tableCrawler 
+                                                    WHERE `product` LIKE :productName AND `timestamp` BETWEEN :fromDate AND :toDate
+                                                    LIMIT ".Config::$defaultMaxHistoryResults);
+        $statement->execute(array(':productName' => $productName, ':fromDate' => $fromDate, ':toDate' => $toDate));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -136,7 +140,13 @@ class DatabaseManager
     public function getCrawledDataFrom($productName, $fromDate)
     {
         $this->checkConnection();
-        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableCrawler WHERE `product` LIKE \"$productName\" AND `timestamp` > \"$fromDate\"", PDO::FETCH_ASSOC);
+//        return $this->pdoConnection->query("SELECT * FROM $this->dbName.$this->tableCrawler WHERE `product` LIKE \"$productName\" AND `timestamp` > \"$fromDate\"", PDO::FETCH_ASSOC);
+
+        $statement = $this->pdoConnection->prepare("SELECT * FROM $this->dbName.$this->tableCrawler   
+                                                    WHERE `product` LIKE :productName AND `timestamp` > :fromDate
+                                                    LIMIT ".Config::$defaultMaxHistoryResults);
+        $statement->execute(array(':productName' => $productName, ':fromDate' => $fromDate));
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -147,7 +157,8 @@ class DatabaseManager
      */
     public function getCrawledDataDefault($productName)
     {
-        $date = strtotime(date("Y-m-d", strtotime("-".Config::$defaultHistoryInterval." day")));
+        // Y-m-d H:m:s
+        $date = date("Y-m-d", strtotime("-" . Config::$defaultHistoryInterval . " day"));
         return $this->getCrawledDataFrom($productName, $date);
     }
 }

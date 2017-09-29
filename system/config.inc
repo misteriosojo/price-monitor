@@ -14,7 +14,8 @@ class Config
 {
     static $toolName = "PriceMonitor";
     static $redirectTimeout = 5;
-    static $defaultHistoryInterval = 1; // days
+    static $defaultHistoryInterval = 1000; // days
+    static $defaultMaxHistoryResults = 100; // count
 }
 
 

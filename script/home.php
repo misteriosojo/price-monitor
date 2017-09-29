@@ -13,11 +13,11 @@
 
 <div id="crawlerDataContainer">
     <?PHP
-    $products = $misteriosoFramework->getProducts();
+//    $products = $misteriosoFramework->getProducts();
     $misteriosoFramework->printCrawledDataAll();
     ?>
 
-    <div style="width:75%;">
+    <div style="width:80%;height:100%;">
         <canvas id="canvas"></canvas>
     </div>
     <script>

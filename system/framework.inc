@@ -54,6 +54,12 @@ class Framework
         return $this->dbClass->getProducts();
     }
 
+    public function getProductsJSON()
+    {
+        $productsResult = $this->dbClass->getProducts();
+        return json_encode($productsResult->fetchAll());
+    }
+
     /**
      * Print the product list
      */
@@ -61,7 +67,7 @@ class Framework
     {
         $this->checkFramework();
         $sqlResult = $this->dbClass->getProducts();
-        if($sqlResult == null){
+        if ($sqlResult == null) {
             error_log("[printProducts] Ops, sqlResult is null");
             return;
         }
@@ -87,15 +93,31 @@ class Framework
     /**
      * Print crawled data
      */
-    public function printCrawledDataAll(){
+    public function printCrawledDataAll()
+    {
         $this->checkFramework();
         $productList = $this->dbClass->getProducts();
 
         while ($tmpProduct = $productList->fetchObject()) {
             $crawlResults = $this->dbClass->getCrawledDataDefault($tmpProduct->name);
 
-            echo " For $tmpProduct->name the number of results is: ".$crawlResults->rowCount()." <br>";
+//            echo " For $tmpProduct->name the number of results is: " . $crawlResults->rowCount() . " <br>";
+            echo " For $tmpProduct->name the number of results is: " . count($crawlResults). " <br>";
+
+            $this->getProductHistoryJSON($tmpProduct->name, '2012-09-01');
         }
 
+    }
+
+    public function getProductHistoryJSON($productName, $fromDate)
+    {
+        $crawlResults = $this->dbClass->getCrawledDataDefault($productName);
+
+        $toReturn=json_decode("{}");
+        $toReturn->product = $productName;
+        $toReturn->fromDate = $fromDate;
+        $toReturn->data = $crawlResults;
+
+        return json_encode($toReturn);
     }
 }

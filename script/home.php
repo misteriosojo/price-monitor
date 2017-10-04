@@ -17,6 +17,8 @@
     $misteriosoFramework->printCrawledDataAll();
     ?>
 
+
+    <!-- Canvas Chart Example -->
     <div style="width:80%;height:100%;">
         <canvas id="canvas"></canvas>
     </div>

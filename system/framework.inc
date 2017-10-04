@@ -54,10 +54,32 @@ class Framework
         return $this->dbClass->getProducts();
     }
 
+    /**
+     * Get products in JSON format
+     * @return string String JSON encoded string
+     */
     public function getProductsJSON()
     {
         $productsResult = $this->dbClass->getProducts();
         return json_encode($productsResult->fetchAll());
+    }
+
+    /**
+     * Get product history in JSON format
+     * @param $productName String Product name
+     * @param $fromDate String Data will be fetched starting from this date
+     * @return string String JSON encoded string
+     */
+    public function getProductHistoryJSON($productName, $fromDate)
+    {
+        $crawlResults = $this->dbClass->getCrawledDataDefault($productName);
+
+        $toReturn = json_decode("{}");
+        $toReturn->product = $productName;
+        $toReturn->fromDate = $fromDate;
+        $toReturn->data = $crawlResults;
+
+        return json_encode($toReturn);
     }
 
     /**
@@ -98,26 +120,25 @@ class Framework
         $this->checkFramework();
         $productList = $this->dbClass->getProducts();
 
+        $i=0;
+
         while ($tmpProduct = $productList->fetchObject()) {
+            $this->reserveCanvas($i);
+
             $crawlResults = $this->dbClass->getCrawledDataDefault($tmpProduct->name);
 
 //            echo " For $tmpProduct->name the number of results is: " . $crawlResults->rowCount() . " <br>";
-            echo " For $tmpProduct->name the number of results is: " . count($crawlResults). " <br>";
+            echo " For $tmpProduct->name the number of results is: " . count($crawlResults) . " <br>";
 
             $this->getProductHistoryJSON($tmpProduct->name, '2012-09-01');
+            $i++;
         }
 
     }
 
-    public function getProductHistoryJSON($productName, $fromDate)
+    private function reserveCanvas($canvasID)
     {
-        $crawlResults = $this->dbClass->getCrawledDataDefault($productName);
-
-        $toReturn=json_decode("{}");
-        $toReturn->product = $productName;
-        $toReturn->fromDate = $fromDate;
-        $toReturn->data = $crawlResults;
-
-        return json_encode($toReturn);
+        echo "<div style=\"width:80%;height:100%;\"><canvas id=\"canvas$canvasID\"></canvas></div>";
     }
+
 }

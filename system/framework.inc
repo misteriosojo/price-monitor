@@ -120,25 +120,125 @@ class Framework
         $this->checkFramework();
         $productList = $this->dbClass->getProducts();
 
-        $i=0;
+        $i = 0;
 
         while ($tmpProduct = $productList->fetchObject()) {
-            $this->reserveCanvas($i);
+//            $crawlResults = $this->dbClass->getCrawledDataDefault($tmpProduct->name);
+//            echo " For $tmpProduct->name the number of results is: " . count($crawlResults) . " <br>";
 
-            $crawlResults = $this->dbClass->getCrawledDataDefault($tmpProduct->name);
+            $productData = json_decode($this->getProductHistoryJSON($tmpProduct->name, '2012-09-01'));
+            $this->drawProductChart($i, $productData);
 
-//            echo " For $tmpProduct->name the number of results is: " . $crawlResults->rowCount() . " <br>";
-            echo " For $tmpProduct->name the number of results is: " . count($crawlResults) . " <br>";
-
-            $this->getProductHistoryJSON($tmpProduct->name, '2012-09-01');
             $i++;
         }
 
     }
 
-    private function reserveCanvas($canvasID)
+    private function drawProductChart($canvasID, $productData)
     {
-        echo "<div style=\"width:80%;height:100%;\"><canvas id=\"canvas$canvasID\"></canvas></div>";
+        $allData = $productData->data;
+
+        $allTimestamp = array();
+        $allPrice = array();
+        $allInstock = array();
+
+        $dataForChart = array();
+
+        foreach ($allData as $oneData) {
+            array_push($allTimestamp, $oneData->timestamp);
+            array_push($allPrice, $oneData->price);
+            array_push($allInstock, $oneData->in_stock);
+
+        }
+
+
+        ?>
+
+        <div style="width:80%;height:100%;">
+            <canvas id="canvas<?= $canvasID; ?>"></canvas>
+        </div>
+        </br>
+        <script>
+            function addLoadEvent(func) {
+                var oldonload = window.onload;
+                if (typeof window.onload != 'function') {
+                    window.onload = func;
+                } else {
+                    window.onload = function() {
+                        if (oldonload) {
+                            oldonload();
+                        }
+                        func();
+                    }
+                }
+            }
+
+            addLoadEvent(function () {
+                var ctx = document.getElementById("canvas<?= $canvasID; ?>").getContext("2d");
+                var aaa = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: "Price",
+                            borderColor: 'blue',
+                            fill: true,
+                            backgroundColor : '#009fff',
+                            data: [ <?PHP foreach ($allData as $oneData) { ?>
+                                {
+                                    t: '<?= $oneData->timestamp; ?>',
+                                    y: '<?= $oneData->price; ?>'
+                                } <?= next($allData) ? "," : "" ?> <?PHP } ?>
+                            ]
+                        }, {
+                            label: "In Stock",
+                            borderColor: 'black',
+                            fill: true,
+                            backgroundColor : '#4e4f4f',
+                            hidden: true,
+                            data: [ <?PHP foreach ($allData as $oneData) { ?>
+                                {
+                                    t: '<?= $oneData->timestamp; ?>',
+                                    y: '<?= $oneData->in_stock; ?>'
+                                } <?= next($allData) ? "," : "" ?> <?PHP } ?>
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: "Product: <?= $productData->product; ?>",
+                            fontSize: 25,
+                            fontColor: 'black'
+                        },
+                        scales: {
+                            xAxes: [{
+                                type: "time",
+                                time: {
+                                    unit: 'day'
+                                },
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Date'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'price'
+                                }
+                            }]
+                        }
+                    }
+                });
+
+
+            });
+        </script>
+
+        <?PHP
     }
 
 }

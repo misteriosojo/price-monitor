@@ -24,6 +24,7 @@
     <link href="theme/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="theme/js/jquery.circliful.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
 
     <!-- Navbar Example !-->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">

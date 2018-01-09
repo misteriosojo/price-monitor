@@ -27,7 +27,7 @@ class DBConfig
     // Ip address and Port to connect to DB
     static $ipDB = "localhost"; // Ip address to connect to DB  ToDo: Change me
     static $portDB = 3306; // Port to connect to DB (default: 3306)  ToDo: Change me
-    static $timeoutDB = 1; // Seconds available to reach the DB
+    static $timeoutDB = 3; // Seconds available to reach the DB
 
     // Account Database: Permissions --> Select + Insert + Create + Drop
     static $userDB = "price_monitor"; // Username to connect to DB.  ToDo: Change me

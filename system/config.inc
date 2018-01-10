@@ -55,6 +55,11 @@ class DBConfig
                           `name` VARCHAR(255) DEFAULT NULL,
                           `link` VARCHAR(255) DEFAULT NULL,
                           `description` TEXT,
+                          `crawling_active` TINYINT(1) DEFAULT '1',
+                          `price_min` INT(11) DEFAULT NULL,
+                          `timestamp_min` DATETIME DEFAULT NULL,
+                          `price_max` INT(11) DEFAULT NULL,
+                          `timestamp_max` DATETIME DEFAULT NULL,
                           PRIMARY KEY (`id`)
                         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;"
     );

@@ -104,12 +104,40 @@ class Framework
             echo "<td>$tmpVar->description</td>";
 
             //////////////
-            // State
-            echo "<td width=\"80px\">ToDo</td>";
+            // Crawling Active
+            echo "<td width=\"80px\">$tmpVar->crawling_active</td>";
+
+            //////////////
+            // Price min
+            echo "<td width=\"90px\">$tmpVar->price_min CHF</td>";
+
+            //////////////
+            // Timestamp Price Min
+            echo "<td width=\"90px\">$tmpVar->timestamp_min</td>";
+
+            //////////////
+            // Price max
+            echo "<td width=\"90px\">$tmpVar->price_max CHF</td>";
+
+            //////////////
+            // Timestamp Price max
+            echo "<td width=\"90px\">$tmpVar->timestamp_max</td>";
 
             // End of row
             echo "</tr>";
         }
+    }
+
+    /**
+     * Delegate to the database the insertion of a crawled data
+     *
+     * @param $product String Product name
+     * @param $price Number Price in CHF
+     * @param $in_stock Number In stock
+     */
+    public function createCrawledData($product, $price, $in_stock)
+    {
+        $this->dbClass->createCrawledData($product, $price, $in_stock);
     }
 
     /**
@@ -164,7 +192,7 @@ class Framework
                 if (typeof window.onload != 'function') {
                     window.onload = func;
                 } else {
-                    window.onload = function() {
+                    window.onload = function () {
                         if (oldonload) {
                             oldonload();
                         }
@@ -182,7 +210,7 @@ class Framework
                             label: "Price",
                             borderColor: 'blue',
                             fill: true,
-                            backgroundColor : '#009fff',
+                            backgroundColor: '#009fff',
                             data: [ <?PHP foreach ($allData as $oneData) { ?>
                                 {
                                     t: '<?= $oneData->timestamp; ?>',
@@ -193,7 +221,7 @@ class Framework
                             label: "In Stock",
                             borderColor: 'black',
                             fill: true,
-                            backgroundColor : '#4e4f4f',
+                            backgroundColor: '#4e4f4f',
                             hidden: true,
                             data: [ <?PHP foreach ($allData as $oneData) { ?>
                                 {

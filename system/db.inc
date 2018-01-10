@@ -125,7 +125,7 @@ class DatabaseManager
         $this->checkConnection();
         $statement = $this->pdoConnection->prepare("SELECT * FROM $this->dbName.$this->tableCrawler 
                                                     WHERE `product` LIKE :productName AND `timestamp` BETWEEN :fromDate AND :toDate
-                                                    LIMIT ".Config::$defaultMaxHistoryResults);
+                                                    LIMIT " . Config::$defaultMaxHistoryResults);
         $statement->execute(array(':productName' => $productName, ':fromDate' => $fromDate, ':toDate' => $toDate));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -144,7 +144,8 @@ class DatabaseManager
 
         $statement = $this->pdoConnection->prepare("SELECT * FROM $this->dbName.$this->tableCrawler   
                                                     WHERE `product` LIKE :productName AND `timestamp` > :fromDate
-                                                    LIMIT ".Config::$defaultMaxHistoryResults);
+                                                    ORDER BY `timestamp` DESC
+                                                    LIMIT " . Config::$defaultMaxHistoryResults);
         $statement->execute(array(':productName' => $productName, ':fromDate' => $fromDate));
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -161,4 +162,42 @@ class DatabaseManager
         $date = date("Y-m-d", strtotime("-" . Config::$defaultHistoryInterval . " day"));
         return $this->getCrawledDataFrom($productName, $date);
     }
+
+    /**
+     * Store crawled data of a specific product
+     *
+     * @param $product String Product name
+     * @param $price Number Price in CHF
+     * @param $in_stock Number Stock available
+     */
+    public function createCrawledData($product, $price, $in_stock)
+    {
+        $this->checkConnection();
+
+        $date = date("Y-m-d H:i:s");
+        $statement = $this->pdoConnection->prepare("INSERT INTO $this->dbName.$this->tableCrawler
+                                                    (`timestamp`, `product`, `price`, `in_stock`)   
+                                                    VALUES (:timestamp, :product, :price, :in_stock)");
+        $statement->execute(array(':timestamp' => $date, ':product' => $product->name, ':price' => $price, ':in_stock' => $in_stock));
+        $this->updatePriceStats($product, $price, $date);
+    }
+
+    private function updatePriceStats($product, $price, $timestamp)
+    {
+        $this->checkConnection();
+
+        if($product->price_min == null || $price < $product->price_min)
+        {
+            $statement = $this->pdoConnection->prepare("UPDATE $this->dbName.$this->tableProducts SET `price_min` = :price_min, `timestamp_min` = :timestamp_min WHERE `name` = :name");
+            $statement->execute(array(':name' => $product->name, ':price_min' => $price, ':timestamp_min' => $timestamp));
+        }
+
+        if($product->price_max == null || $price > $product->price_max)
+        {
+            $statement = $this->pdoConnection->prepare("UPDATE $this->dbName.$this->tableProducts SET `price_max` = :price_max, `timestamp_max` = :timestamp_max WHERE `name` = :name");
+            $statement->execute(array(':name' => $product->name, ':price_max' => $price, ':timestamp_max' => $timestamp));
+        }
+
+    }
+
 }

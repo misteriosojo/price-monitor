@@ -16,7 +16,11 @@
     <tr class="bg-primary">
         <td>Name</td>
         <td>Description</td>
-        <td>State</td>
+        <td>Crawling Active</td>
+        <td>Price Min</td>
+        <td>Timestamp Price Min</td>
+        <td>Price Max</td>
+        <td>Timestamp Price Min</td>
     </tr>
 
     <?PHP $misteriosoFramework->printProducts(); ?>

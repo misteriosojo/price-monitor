@@ -12,10 +12,10 @@
  **********************************/
 class Config
 {
-    static $toolName = "PriceMonitor";
-    static $redirectTimeout = 5;
-    static $defaultHistoryInterval = 1000; // days
-    static $defaultMaxHistoryResults = 100; // count
+    static $toolName = "PriceMonitor"; // Name of this tool
+    static $redirectTimeout = 5; // Waiting time to be redirected to the homepage when a 404 error occurs
+    static $defaultHistoryInterval = 1000; // Default days used as elapsed time from "now"
+    static $defaultMaxHistoryResults = 100; // Max results used to build the charts
 }
 
 
@@ -35,8 +35,8 @@ class DBConfig
 
     // Database data
     static $dbName = "price_monitor"; // Database name  ToDo: Change me
-    static $tableProducts = "products"; // Table of product list
-    static $tableCrawler = "crawler"; // Table od crawled data
+    static $tableProducts = "products"; // Table of product list (if you edit this, change also the name in DDL below)
+    static $tableCrawler = "crawler"; // Table od crawled data (if you edit this, change also the name in DDL below)
 
     // DDL to create the tables
     static $createTables = array(
